@@ -2,6 +2,12 @@ FROM ubuntu:latest
 
 MAINTAINER André Felipe Dias <andre.dias@pronus.io>
 
+# http://askubuntu.com/questions/581458/how-to-configure-locales-to-unicode-in-a-docker-ubuntu-14-04-container
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 RUN apt-get update && \
     apt-get install -y software-properties-common
 
@@ -25,4 +31,11 @@ RUN hg clone https://selenic.com/repo/hg && \
     cd /tmp && \
     rm -rf hg
 
-ADD desempenho.* /usr/local/bin/
+# habilitação de algumas extensões
+RUN echo '[extensions]\n\
+strip =\n\
+histedit =\n\
+rebase =\n' > /etc/mercurial/hgrc.d/extensoes.rc
+
+ADD *.sh /usr/local/bin/
+ADD *.py /usr/local/bin/
