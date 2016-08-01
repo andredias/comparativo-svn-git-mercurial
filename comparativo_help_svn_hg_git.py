@@ -65,6 +65,9 @@ def num_linhas_help(comando, subcomando=None):
         num_linhas = run('%s --help | wc -l' % comando, shell=True, universal_newlines=True,
                          stdout=PIPE, stderr=PIPE).stdout.strip()
     else:
+        if comando == 'hg':
+            comando = 'chg'
+            subcomando = '-v ' + subcomando  # versão estendida do help do Mercurial
         num_linhas = run('%s help %s | wc -l' % (comando, subcomando), shell=True,
                          universal_newlines=True, stdout=PIPE, stderr=PIPE).stdout.strip()
     return int(num_linhas)
@@ -95,6 +98,7 @@ def get_help_comandos_comuns():
         'show',
         'status',
         'update',
+        'tag',
     )
     total_linhas = [0, 0, 0]
     total_comandos = [0, 0, 0]
@@ -104,8 +108,8 @@ def get_help_comandos_comuns():
         print('\n', subcomando, sep='', end='')
         for i, vcs in enumerate(seq_vcs):
             num_linhas = num_linhas_help(vcs, subcomando)
-            if vcs == 'hg' and subcomando == 'show':
-                # hg showconfig não faz parte da relação
+            if vcs == 'hg' and subcomando in ['show', 'checkout']:
+                # hg showconfig não faz parte da relação e checkout é apelido para update
                 num_linhas = 0
             print(',', num_linhas or '', end='')
             if num_linhas:
