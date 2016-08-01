@@ -3,7 +3,7 @@ FROM ubuntu:latest
 MAINTAINER André Felipe Dias <andre.dias@pronus.io>
 
 # http://askubuntu.com/questions/581458/how-to-configure-locales-to-unicode-in-a-docker-ubuntu-14-04-container
-RUN locale-gen en_US.UTF-8
+RUN locale-gen en_US.UTF-8 pt_BR.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8

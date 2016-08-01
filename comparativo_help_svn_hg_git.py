@@ -5,10 +5,12 @@ OBSERVAÇÃO: O número de linhas do texto de ajuda do Git varia conforme a larg
 Use uma janela com 80 colunas para fazer as medições.
 '''
 
+import locale
 import re
 from itertools import chain
-from os import environ
 from subprocess import run, PIPE
+
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 def get_svn_commands():
@@ -107,17 +109,19 @@ def get_help_comandos_comuns():
     for subcomando in subcomandos:
         print('\n', subcomando, sep='', end='')
         for i, vcs in enumerate(seq_vcs):
+            locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
             num_linhas = num_linhas_help(vcs, subcomando)
             if vcs == 'hg' and subcomando in ['show', 'checkout']:
                 # hg showconfig não faz parte da relação e checkout é apelido para update
                 num_linhas = 0
-            print(',', num_linhas or '', end='')
+            locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+            print(',', '{:n}'.format(num_linhas) if num_linhas else '', end='')
             if num_linhas:
                 total_linhas[i] += num_linhas
                 total_comandos[i] += 1
-    print('\nTotal linhas, {}, {}, {}'.format(*total_linhas))
+    print('\nTotal linhas, {:n}, {:n}, {:n}'.format(*total_linhas))
     print('Número de comandos, {}, {}, {}'.format(*total_comandos))
-    print('Média linhas/comando, {}, {}, {}'.format(*(
+    print('Média linhas/comando, {:n}, {:n}, {:n}'.format(*(
         round(linhas / comandos) for linhas, comandos in zip(total_linhas, total_comandos)))
     )
     return
